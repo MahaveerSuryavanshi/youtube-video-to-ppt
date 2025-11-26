@@ -1,2 +1,7 @@
 streamlit
 pandas
+yt-dlp
+opencv-python
+reportlab
+Pillow
+numpy
