@@ -19,12 +19,17 @@ PDF_FILE = "slides.pdf"
 def download_video(url):
     ydl_opts = {
         "outtmpl": TEMP_VIDEO,
-        "format": "mp4/best",
-        "quiet": True
+        "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4",
+        "merge_output_format": "mp4",
+        "quiet": True,
+        "ignoreerrors": True,
+        "noprogress": True,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        info = ydl.extract_info(url, download=True)
+        if info is None:
+            raise Exception("Failed to download video. Stream may be restricted.")
 
 
 # -------------------------
