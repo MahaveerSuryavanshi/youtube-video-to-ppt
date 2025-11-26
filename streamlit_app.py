@@ -6,6 +6,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 import shutil
+import subprocess
 
 # Paths
 TEMP_VIDEO = "video.mp4"
