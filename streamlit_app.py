@@ -40,37 +40,18 @@ def extract_slides(video_path):
         shutil.rmtree(SLIDE_DIR)
     os.makedirs(SLIDE_DIR)
 
-    cap = cv2.VideoCapture(video_path)
-    prev = None
-    slide_count = 0
+    # FFMPEG scene detection
+    command = [
+        "ffmpeg",
+        "-i", video_path,
+        "-vf", "select='gt(scene,0.25)',scale=1280:-1",
+        "-vsync", "vfr",
+        f"{SLIDE_DIR}/slide_%03d.jpg"
+    ]
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    subprocess.run(command)
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
-
-        if prev is None:
-            prev = gray
-            continue
-
-        diff = cv2.absdiff(prev, gray)
-        threshold = cv2.threshold(diff, 30, 255, cv2.THRESH_BINARY)[1]
-        diff_value = cv2.countNonZero(threshold)
-
-        # When diff is large → slide changed
-        if diff_value > 500000:
-            fname = f"{SLIDE_DIR}/slide_{slide_count}.jpg"
-            cv2.imwrite(fname, frame)
-            slide_count += 1
-
-            prev = gray
-
-    cap.release()
-    return slide_count
-
+    return len(os.listdir(SLIDE_DIR))
 
 # -------------------------
 # Build PDF
