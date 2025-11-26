@@ -1,7 +1,7 @@
 streamlit
 pandas
 yt-dlp
-opencv-python
+opencv-python-headless
 reportlab
 Pillow
 numpy
